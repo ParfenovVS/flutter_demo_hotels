@@ -8,17 +8,17 @@ class HotelScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(_hotel.name),
-        leading: new IconButton(
-          icon: new Icon(Icons.arrow_back),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_hotel.name),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: new GridView.builder(
+      body: GridView.builder(
         gridDelegate:
-            new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: _hotel.photos.length,
         itemBuilder: _buildItems(),
       ),

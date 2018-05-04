@@ -8,9 +8,9 @@ import 'package:flutter_demo/common/transitions.dart';
 class HotelsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: new AppBar(title: new Text(Strings.hotels)),
-        body: new HotelList());
+    return Scaffold(
+        appBar: AppBar(title: Text(Strings.hotels)),
+        body: HotelList());
   }
 }
 
@@ -18,7 +18,7 @@ class HotelList extends StatefulWidget {
   HotelList({Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => new _HotelListState();
+  State<StatefulWidget> createState() => _HotelListState();
 }
 
 class _HotelListState extends State<HotelList> implements HotelListContract {
@@ -29,7 +29,7 @@ class _HotelListState extends State<HotelList> implements HotelListContract {
   bool _isLoading;
 
   _HotelListState() {
-    _presenter = new HotelListPresenter(this);
+    _presenter = HotelListPresenter(this);
   }
 
   @override
@@ -51,7 +51,7 @@ class _HotelListState extends State<HotelList> implements HotelListContract {
   void onError() {
     Scaffold
         .of(context)
-        .showSnackBar(new SnackBar(content: new Text(Strings.defaultError)));
+        .showSnackBar(SnackBar(content: Text(Strings.defaultError)));
   }
 
   @override
@@ -59,11 +59,11 @@ class _HotelListState extends State<HotelList> implements HotelListContract {
     Widget widget;
 
     if (_isLoading) {
-      widget = new Center(
-        child: new CircularProgressIndicator(),
+      widget = Center(
+        child: CircularProgressIndicator(),
       );
     } else {
-      widget = new ListView(
+      widget = ListView(
         padding: EdgeInsets.symmetric(horizontal: 4.0),
         children: _buildHotelList(),
       );
@@ -73,7 +73,7 @@ class _HotelListState extends State<HotelList> implements HotelListContract {
   }
 
   List<_HotelListItem> _buildHotelList() {
-    return _hotels.map((hotel) => new _HotelListItem(hotel)).toList();
+    return _hotels.map((hotel) => _HotelListItem(hotel)).toList();
   }
 }
 
@@ -84,30 +84,30 @@ class _HotelListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       padding: EdgeInsets.only(top: 4.0),
-      child: new Card(
-        child: new InkWell(
+      child: Card(
+        child: InkWell(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              new Image.network(
+              Image.network(
                 _hotel.photos[0].url,
                 fit: BoxFit.cover,
               ),
-              new ListTile(
-                title: new Text(_hotel.name),
-                subtitle: new Text(_hotel.address),
-                trailing: new Row(
+              ListTile(
+                title: Text(_hotel.name),
+                subtitle: Text(_hotel.address),
+                trailing: Row(
                   children: <Widget>[
-                    new Image.asset(
+                    Image.asset(
                       "assets/image/ic_star_black_24dp.png",
                       scale: 1.5,
                       color: Colors.orange,
                     ),
-                    new Text(
+                    Text(
                       _hotel.stars.toString(),
-                      style: new TextStyle(fontSize: 18.0),
+                      style: TextStyle(fontSize: 18.0),
                     ),
                   ],
                 ),
@@ -115,8 +115,8 @@ class _HotelListItem extends StatelessWidget {
             ],
           ),
           onTap: () => Navigator.of(context).push(
-                new PageRouteBuilder(
-                  pageBuilder: (context, _, __) => new HotelScreen(_hotel),
+                PageRouteBuilder(
+                  pageBuilder: (context, _, __) => HotelScreen(_hotel),
                   transitionsBuilder: Transitions.slideInTransitionsBuilder(),
                   transitionDuration: DEFAULT_SLIDE_IN_DURATION,
                 ),

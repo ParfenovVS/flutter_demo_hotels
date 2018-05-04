@@ -4,12 +4,12 @@ import 'common/strings.dart';
 
 main() {
   runApp(
-    new MaterialApp(
+    MaterialApp(
       title: Strings.appName,
-      theme: new ThemeData(
+      theme: ThemeData(
         primaryColor: Colors.white,
       ),
-      home: new HotelsPage(),
+      home: HotelsPage(),
     ),
   );
 }

@@ -15,5 +15,5 @@ class Hotel {
         stars = map["stars"],
         address = map["address"]["en"],
         photos =
-            (map['photos'] as List)?.map((i) => new Photo.fromMap(i))?.toList();
+            (map['photos'] as List)?.map((i) => Photo.fromMap(i))?.toList();
 }

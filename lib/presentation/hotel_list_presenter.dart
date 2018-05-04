@@ -11,7 +11,7 @@ class HotelListPresenter {
   HotelRepository _repository;
 
   HotelListPresenter(this._view) {
-    _repository = new HotelRepository();
+    _repository = HotelRepository();
   }
 
   void loadHotels() {
