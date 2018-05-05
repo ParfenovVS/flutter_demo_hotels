@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-const DEFAULT_SLIDE_IN_DURATION = const Duration(milliseconds: 100);
+const DEFAULT_SLIDE_IN_DURATION = const Duration(milliseconds: 200);
 
 class Transitions {
-  static RouteTransitionsBuilder slideInTransitionsBuilder() {
+  static RouteTransitionsBuilder fadeTransitionsBuilder() {
     return (_, animation, __, child) {
-      return SlideTransition(
-        position: Tween(
-          begin: const Offset(1.0, 0.0),
-          end: const Offset(0.0, 0.0),
+      return FadeTransition(
+        opacity: Tween(
+          begin: 0.0,
+          end: 1.1,
         ).animate(animation),
         child: child,
       );

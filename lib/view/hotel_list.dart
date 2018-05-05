@@ -8,9 +8,7 @@ import 'package:flutter_demo/common/transitions.dart';
 class HotelsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text(Strings.hotels)),
-        body: HotelList());
+    return HotelList();
   }
 }
 
@@ -24,7 +22,7 @@ class HotelList extends StatefulWidget {
 class _HotelListState extends State<HotelList> implements HotelListContract {
   HotelListPresenter _presenter;
 
-  List<Hotel> _hotels;
+  List<_HotelListItem> _hotels;
 
   bool _isLoading;
 
@@ -42,7 +40,7 @@ class _HotelListState extends State<HotelList> implements HotelListContract {
   @override
   void onSuccess(List<Hotel> hotels) {
     setState(() {
-      _hotels = hotels;
+      _hotels = hotels.map((hotel) => _HotelListItem(hotel)).toList();
       _isLoading = false;
     });
   }
@@ -59,21 +57,39 @@ class _HotelListState extends State<HotelList> implements HotelListContract {
     Widget widget;
 
     if (_isLoading) {
-      widget = Center(
-        child: CircularProgressIndicator(),
+      widget = Scaffold(
+        appBar: AppBar(
+          title: Text(Strings.hotels),
+        ),
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     } else {
-      widget = ListView(
-        padding: EdgeInsets.symmetric(horizontal: 4.0),
-        children: _buildHotelList(),
+      widget = Scaffold(
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              floating: true,
+              pinned: false,
+              snap: true,
+              title: Text(Strings.hotels),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 40.0),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => _hotels[index],
+                  childCount: _hotels.length,
+                ),
+              ),
+            )
+          ],
+        ),
       );
     }
 
     return widget;
-  }
-
-  List<_HotelListItem> _buildHotelList() {
-    return _hotels.map((hotel) => _HotelListItem(hotel)).toList();
   }
 }
 
@@ -87,40 +103,53 @@ class _HotelListItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(top: 4.0),
       child: Card(
-        child: InkWell(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Image.network(
-                _hotel.photos[0].url,
-                fit: BoxFit.cover,
-              ),
-              ListTile(
-                title: Text(_hotel.name),
-                subtitle: Text(_hotel.address),
-                trailing: Row(
-                  children: <Widget>[
-                    Image.asset(
-                      "assets/image/ic_star_black_24dp.png",
-                      scale: 1.5,
-                      color: Colors.orange,
-                    ),
-                    Text(
-                      _hotel.stars.toString(),
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                  ],
+        child: Stack(
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                FadeInImage(
+                  height: 200.0,
+                  fadeInDuration: Duration(milliseconds: 300),
+                  placeholder: AssetImage(""),
+                  image: NetworkImage(_hotel.photos[0].url),
+                  fit: BoxFit.cover,
                 ),
-              )
-            ],
-          ),
-          onTap: () => Navigator.of(context).push(
-                PageRouteBuilder(
-                  pageBuilder: (context, _, __) => HotelScreen(_hotel),
-                  transitionsBuilder: Transitions.slideInTransitionsBuilder(),
-                  transitionDuration: DEFAULT_SLIDE_IN_DURATION,
+                ListTile(
+                  title: Text(_hotel.name),
+                  subtitle: Text(_hotel.address),
+                  trailing: Row(
+                    children: <Widget>[
+                      Image.asset(
+                        "assets/image/ic_star_black_24dp.png",
+                        scale: 1.5,
+                        color: Colors.orange,
+                      ),
+                      Text(
+                        _hotel.stars.toString(),
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            new Positioned.fill(
+              child: new Material(
+                color: Colors.transparent,
+                child: new InkWell(
+                  onTap: () => Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder: (context, _, __) => HotelScreen(_hotel),
+                          transitionsBuilder:
+                              Transitions.fadeTransitionsBuilder(),
+                          transitionDuration: DEFAULT_SLIDE_IN_DURATION,
+                        ),
+                      ),
                 ),
               ),
+            ),
+          ],
         ),
       ),
     );

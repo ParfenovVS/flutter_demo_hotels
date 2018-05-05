@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/model/entity/hotel.dart';
+import 'package:meta/meta.dart';
 
 class HotelScreen extends StatelessWidget {
   final Hotel _hotel;
@@ -9,37 +10,48 @@ class HotelScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_hotel.name),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: GridView.builder(
-        gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemCount: _hotel.photos.length,
-        itemBuilder: _buildItems(),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            floating: true,
+            pinned: false,
+            snap: true,
+            title: Text(_hotel.name),
+          ),
+          SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              _buildItems(),
+              childCount: _hotel.photos.length,
+            ),
+            gridDelegate:
+                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          ),
+        ],
       ),
     );
   }
 
   IndexedWidgetBuilder _buildItems() {
-    return (context, index) => _PhotoListItem(_hotel.photos[index].url);
+    return (context, index) => _PhotoListItem(url: _hotel.photos[index].url);
   }
 }
 
 class _PhotoListItem extends StatelessWidget {
-  final String url;
+  const _PhotoListItem({Key key, @required this.url})
+      : assert(url != null),
+        super(key: key);
 
-  _PhotoListItem(this.url);
+  final String url;
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      url,
-      fit: BoxFit.cover,
+    return Container(
+      child: FadeInImage(
+        fadeInDuration: Duration(milliseconds: 300),
+        placeholder: AssetImage(""),
+        image: NetworkImage(url),
+        fit: BoxFit.cover,
+      ),
     );
   }
 }
